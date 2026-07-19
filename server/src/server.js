@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
 const { requireAuth, requireRole } = require('./middleware/authMiddleware');
 const employeeRoutes = require('./routes/employeeRoutes');
+const organizationRoutes = require('./routes/organizationRoutes');
 
 const app = express();
 app.use(cors({
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
+app.use('/api/organization', organizationRoutes);
 
 app.get('/api/auth/me', requireAuth, (req, res) => {
   res.json({ user: req.user });
