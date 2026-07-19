@@ -43,15 +43,55 @@ async function createEmployee(req, res) {
 
 async function getAllEmployees(req, res) {
   try {
-    const employees = await prisma.employee.findMany({
-      where: { isDeleted: false },
-      select: {
-        id: true, employeeCode: true, name: true, email: true, phone: true,
-        department: true, designation: true, salary: true, joiningDate: true,
-        status: true, role: true, profileImageUrl: true, reportingManagerId: true,
+    const {
+      search, department, role, status,
+      sortBy = 'name', order = 'asc',
+      page = '1', limit = '10',
+    } = req.query;
+
+    const where = { isDeleted: false };
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+    if (department) where.department = department;
+    if (role) where.role = role;
+    if (status) where.status = status;
+
+    const allowedSortFields = ['name', 'joiningDate'];
+    const sortField = allowedSortFields.includes(sortBy) ? sortBy : 'name';
+    const sortOrder = order === 'desc' ? 'desc' : 'asc';
+
+    const pageNum = Math.max(parseInt(page, 10) || 1, 1);
+    const limitNum = Math.max(parseInt(limit, 10) || 10, 1);
+
+    const [employees, total] = await Promise.all([
+      prisma.employee.findMany({
+        where,
+        select: {
+          id: true, employeeCode: true, name: true, email: true, phone: true,
+          department: true, designation: true, salary: true, joiningDate: true,
+          status: true, role: true, profileImageUrl: true, reportingManagerId: true,
+        },
+        orderBy: { [sortField]: sortOrder },
+        skip: (pageNum - 1) * limitNum,
+        take: limitNum,
+      }),
+      prisma.employee.count({ where }),
+    ]);
+
+    res.json({
+      data: employees,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum),
       },
     });
-    res.json(employees);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error fetching employees' });
