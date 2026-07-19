@@ -5,6 +5,7 @@ const prisma = require('./config/prismaClient');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
 const { requireAuth, requireRole } = require('./middleware/authMiddleware');
+const employeeRoutes = require('./routes/employeeRoutes');
 
 const app = express();
 app.use(cors({
@@ -14,6 +15,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api/auth', authRoutes);
+app.use('/api/employees', employeeRoutes);
 
 app.get('/api/auth/me', requireAuth, (req, res) => {
   res.json({ user: req.user });
