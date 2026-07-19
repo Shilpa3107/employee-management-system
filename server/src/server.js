@@ -4,7 +4,7 @@ const cors = require('cors');
 const prisma = require('./config/prismaClient');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
-const { requireAuth } = require('./middleware/authMiddleware');
+const { requireAuth, requireRole } = require('./middleware/authMiddleware');
 
 const app = express();
 app.use(cors({
@@ -18,6 +18,7 @@ app.use('/api/auth', authRoutes);
 app.get('/api/auth/me', requireAuth, (req, res) => {
   res.json({ user: req.user });
 });
+
 
 app.get('/api/health', async (req, res) => {
   try {
