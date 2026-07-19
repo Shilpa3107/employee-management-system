@@ -46,11 +46,12 @@ export function OrgTreePage() {
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Organization Chart</h1>
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-600 mb-4">{error}</p>}
-      {!loading && tree.length === 0 && <p className="text-gray-500">No employees found.</p>}
-      <div className="bg-white rounded-lg shadow p-6">
+      <h1 className="text-2xl font-bold mb-1 text-slate-900 dark:text-slate-100">Organization Chart</h1>
+      <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Reporting structure across the company</p>
+      {loading && <p className="text-slate-500 dark:text-slate-400">Loading...</p>}
+      {error && <p className="text-rose-600 dark:text-rose-400 mb-4">{error}</p>}
+      {!loading && tree.length === 0 && <p className="text-slate-500 dark:text-slate-400">No employees found.</p>}
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
         {tree.map((root) => (
           <OrgNode key={root.id} node={root} allEmployees={allEmployees} onAssign={handleAssign} />
         ))}

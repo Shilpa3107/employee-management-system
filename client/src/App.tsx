@@ -8,10 +8,12 @@ import { EmployeeForm } from './pages/EmployeeForm';
 import { EmployeeEdit } from './pages/EmployeeEdit';
 import { EmployeeDetail } from './pages/EmployeeDetail';
 import { OrgTreePage } from './pages/OrgTree';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   return (
     <BrowserRouter>
+<ThemeProvider>
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -66,6 +68,7 @@ function App() {
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </AuthProvider>
+</ThemeProvider>
     </BrowserRouter>
   );
 }

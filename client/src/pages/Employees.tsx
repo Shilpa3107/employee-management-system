@@ -51,15 +51,16 @@ export function Employees() {
   }
 
   const canManage = user?.role === 'SUPER_ADMIN' || user?.role === 'HR_MANAGER';
+  const inputClass = "border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded-md px-3 py-2 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500";
 
   return (
     <Layout>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Employees ({total})</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Employees ({total})</h1>
         {canManage && (
           <Link
             to="/employees/new"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors"
           >
             + Add Employee
           </Link>
@@ -72,42 +73,35 @@ export function Employees() {
           placeholder="Search name or email..."
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          className="border rounded px-3 py-2 text-sm w-64"
+          className={`${inputClass} w-64`}
         />
         <input
           type="text"
           placeholder="Filter by department..."
           value={department}
           onChange={(e) => { setDepartment(e.target.value); setPage(1); }}
-          className="border rounded px-3 py-2 text-sm w-48"
+          className={`${inputClass} w-48`}
         />
-        <select
-          value={role}
-          onChange={(e) => { setRole(e.target.value); setPage(1); }}
-          className="border rounded px-3 py-2 text-sm"
-        >
+        <select value={role} onChange={(e) => { setRole(e.target.value); setPage(1); }} className={inputClass}>
           <option value="">All Roles</option>
           <option value="SUPER_ADMIN">Super Admin</option>
           <option value="HR_MANAGER">HR Manager</option>
           <option value="EMPLOYEE">Employee</option>
         </select>
-        <select
-          value={status}
-          onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-          className="border rounded px-3 py-2 text-sm"
-        >
+        <select value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }} className={inputClass}>
           <option value="">All Statuses</option>
           <option value="ACTIVE">Active</option>
           <option value="INACTIVE">Inactive</option>
         </select>
       </div>
 
-      {error && <p className="text-red-600 mb-4">{error}</p>}
-      <div className="bg-white rounded-lg shadow overflow-x-auto">
+      {error && <p className="text-rose-600 dark:text-rose-400 mb-4">{error}</p>}
+
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-x-auto">
         <table className="w-full text-sm text-left">
-          <thead className="bg-gray-100 text-gray-600">
+          <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
             <tr>
-              <th className="px-4 py-3 cursor-pointer" onClick={() => toggleSort('name')}>
+              <th className="px-4 py-3 cursor-pointer select-none" onClick={() => toggleSort('name')}>
                 Name {sortBy === 'name' && (order === 'asc' ? '▲' : '▼')}
               </th>
               <th className="px-4 py-3">Email</th>
@@ -115,41 +109,43 @@ export function Employees() {
               <th className="px-4 py-3">Designation</th>
               <th className="px-4 py-3">Role</th>
               <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3 cursor-pointer" onClick={() => toggleSort('joiningDate')}>
+              <th className="px-4 py-3 cursor-pointer select-none" onClick={() => toggleSort('joiningDate')}>
                 Joined {sortBy === 'joiningDate' && (order === 'asc' ? '▲' : '▼')}
               </th>
               <th className="px-4 py-3">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-slate-700 dark:text-slate-200">
             {loading ? (
-              <tr><td colSpan={8} className="px-4 py-6 text-center text-gray-500">Loading...</td></tr>
+              <tr><td colSpan={8} className="px-4 py-6 text-center text-slate-400">Loading...</td></tr>
             ) : employees.length === 0 ? (
-              <tr><td colSpan={8} className="px-4 py-6 text-center text-gray-500">No employees found</td></tr>
+              <tr><td colSpan={8} className="px-4 py-6 text-center text-slate-400">No employees found</td></tr>
             ) : (
               employees.map((emp) => (
-                <tr key={emp.id} className="border-t hover:bg-gray-50">
-                  <td className="px-4 py-3">{emp.name}</td>
+                <tr key={emp.id} className="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/40">
+                  <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">{emp.name}</td>
                   <td className="px-4 py-3">{emp.email}</td>
                   <td className="px-4 py-3">{emp.department}</td>
                   <td className="px-4 py-3">{emp.designation}</td>
                   <td className="px-4 py-3">{emp.role}</td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded text-xs ${emp.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${emp.status === 'ACTIVE' ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'}`}>
                       {emp.status}
                     </span>
                   </td>
                   <td className="px-4 py-3">{new Date(emp.joiningDate).toLocaleDateString()}</td>
-                  <td className="px-4 py-3 flex gap-2">
-                    <Link to={`/employees/${emp.id}`} className="text-blue-600 hover:underline">View</Link>
-                    {canManage && (
-                      <Link to={`/employees/${emp.id}/edit`} className="text-yellow-600 hover:underline">Edit</Link>
-                    )}
-                    {user?.role === 'SUPER_ADMIN' && (
-                      <button onClick={() => handleDelete(emp.id, emp.name)} className="text-red-600 hover:underline">
-                        Delete
-                      </button>
-                    )}
+                  <td className="px-4 py-3">
+                    <div className="flex gap-3">
+                      <Link to={`/employees/${emp.id}`} className="text-indigo-600 dark:text-indigo-400 hover:underline">View</Link>
+                      {canManage && (
+                        <Link to={`/employees/${emp.id}/edit`} className="text-amber-600 dark:text-amber-400 hover:underline">Edit</Link>
+                      )}
+                      {user?.role === 'SUPER_ADMIN' && (
+                        <button onClick={() => handleDelete(emp.id, emp.name)} className="text-rose-600 dark:text-rose-400 hover:underline">
+                          Delete
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))
@@ -159,19 +155,19 @@ export function Employees() {
       </div>
 
       <div className="flex justify-between items-center mt-4">
-        <p className="text-sm text-gray-500">Page {page} of {totalPages}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Page {page} of {totalPages}</p>
         <div className="flex gap-2">
           <button
             disabled={page <= 1}
             onClick={() => setPage((p) => p - 1)}
-            className="px-3 py-1 border rounded text-sm disabled:opacity-40"
+            className="px-3 py-1 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-md text-sm disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-slate-700"
           >
             Previous
           </button>
           <button
             disabled={page >= totalPages}
             onClick={() => setPage((p) => p + 1)}
-            className="px-3 py-1 border rounded text-sm disabled:opacity-40"
+            className="px-3 py-1 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-md text-sm disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-slate-700"
           >
             Next
           </button>

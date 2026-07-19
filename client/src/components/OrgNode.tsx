@@ -2,10 +2,10 @@ import { useState } from 'react';
 import type { OrgTreeNode } from '../api/organizationApi';
 import { useAuth } from '../context/AuthContext';
 
-const roleColors: Record<string, string> = {
-  SUPER_ADMIN: 'border-purple-400 bg-purple-50',
-  HR_MANAGER: 'border-blue-400 bg-blue-50',
-  EMPLOYEE: 'border-gray-300 bg-white',
+const roleStyles: Record<string, string> = {
+  SUPER_ADMIN: 'border-indigo-400 dark:border-indigo-500 bg-indigo-50 dark:bg-indigo-950/40',
+  HR_MANAGER: 'border-violet-300 dark:border-violet-600 bg-violet-50 dark:bg-violet-950/30',
+  EMPLOYEE: 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800',
 };
 
 interface Props {
@@ -22,21 +22,21 @@ export function OrgNode({ node, allEmployees, onAssign }: Props) {
 
   return (
     <div className="ml-6">
-      <div className={`inline-block border-2 rounded-lg px-4 py-2 my-1 shadow-sm ${roleColors[node.role] || 'bg-white'}`}>
-        <div className="flex items-center gap-2">
+      <div className={`inline-block border-2 rounded-lg px-4 py-2.5 my-1.5 ${roleStyles[node.role] || 'bg-white dark:bg-slate-800'}`}>
+        <div className="flex items-start gap-2">
           {hasReports && (
-            <button onClick={() => setCollapsed((c) => !c)} className="text-gray-500 text-xs w-4">
+            <button onClick={() => setCollapsed((c) => !c)} className="text-slate-400 dark:text-slate-500 text-xs w-4 mt-1">
               {collapsed ? '▶' : '▼'}
             </button>
           )}
           <div>
-            <p className="font-semibold text-sm text-gray-800">{node.name}</p>
-            <p className="text-xs text-gray-500">{node.designation} · {node.department}</p>
+            <p className="font-semibold text-sm text-slate-900 dark:text-slate-100">{node.name}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{node.designation} · {node.department}</p>
             {canManage && (
               <select
                 value={node.reportingManagerId ?? ''}
                 onChange={(e) => onAssign(node.id, e.target.value || null)}
-                className="mt-1 text-xs border rounded px-1 py-0.5 w-full"
+                className="mt-1.5 text-xs border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded px-1.5 py-1 w-full"
               >
                 <option value="">No manager</option>
                 {allEmployees
@@ -51,7 +51,7 @@ export function OrgNode({ node, allEmployees, onAssign }: Props) {
       </div>
 
       {!collapsed && hasReports && (
-        <div className="border-l-2 border-gray-200 ml-3">
+        <div className="border-l-2 border-slate-200 dark:border-slate-700 ml-3">
           {node.directReports.map((child) => (
             <OrgNode key={child.id} node={child} allEmployees={allEmployees} onAssign={onAssign} />
           ))}
