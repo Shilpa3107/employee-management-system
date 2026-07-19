@@ -102,4 +102,4 @@ async function getOrgTree(req, res) {
   }
 }
 
-module.exports = { assignManager, getDirectReports, getOrgTree };
+module.exports = { assignManager, getDirectReports, getOrgTree, wouldCreateCycleForTest: wouldCreateCycle };
