@@ -7,6 +7,7 @@ import { Employees } from './pages/Employees';
 import { EmployeeForm } from './pages/EmployeeForm';
 import { EmployeeEdit } from './pages/EmployeeEdit';
 import { EmployeeDetail } from './pages/EmployeeDetail';
+import { OrgTreePage } from './pages/OrgTree';
 
 function App() {
   return (
@@ -51,6 +52,14 @@ function App() {
   element={
     <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'HR_MANAGER']}>
       <EmployeeEdit />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/organization"
+  element={
+    <ProtectedRoute>
+      <OrgTreePage />
     </ProtectedRoute>
   }
 />
